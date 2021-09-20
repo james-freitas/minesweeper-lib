@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.codeonblue.minesweeper'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 repositories {
     mavenCentral()
@@ -22,4 +22,18 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+// Publishing options
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.codeonblue.minesweeper'
+            artifactId = 'minesweeper-lib'
+            version = '1.0'
+
+            from components.java
+        }
+    }
 }

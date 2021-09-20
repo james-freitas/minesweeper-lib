@@ -4,8 +4,11 @@ The goal of this library is to demonstrate the use of the Minesweeper API
 
 ### How to use
 
-- Import the library in your build.gradle
-- Use it in your code
+1. Import the library in your build.gradle
+```bash
+implementation 'com.codeonblue.minesweeper:minesweeper-lib:1.0'
+```
+2. Use it in your code like shown bellow
 
 ```kotlin
     println(createGameAndReturnGameId())
