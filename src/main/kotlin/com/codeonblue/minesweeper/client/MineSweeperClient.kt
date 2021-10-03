@@ -1,9 +1,8 @@
 package com.codeonblue.minesweeper.client
 
-import com.codeonblue.minesweeper.dto.CellStatus
 import com.codeonblue.minesweeper.dto.CreatedGameResponse
 import com.codeonblue.minesweeper.dto.MarkCellDto
-import com.codeonblue.minesweeper.dto.RevealedCellResponse
+import com.codeonblue.minesweeper.dto.ReveledCellResponse
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -39,18 +38,12 @@ class MineSweeperClient(private val baseUrl: String? = "https://minesweep-api.he
 
     fun markCellAndReturnCurrentCellStatus(
         gameId: String,
-        cellNumber: String,
-        cellCurrentStatus: String
+        cellNumber: String
     ): String {
         FuelManager.instance.basePath = baseUrl
         val(request, _, result) = "/games/$gameId/cells/$cellNumber/mark"
             .httpPost()
             .header("Content-Type" to "application/json")
-            .body(
-                generateRequestBody(
-                    MarkCellDto(CellStatus.valueOf(cellCurrentStatus))
-                )
-            )
             .response()
         result.fold(
             success = { responseData ->
@@ -73,12 +66,6 @@ class MineSweeperClient(private val baseUrl: String? = "https://minesweep-api.he
         )
     }
 
-    private fun generateRequestBody(requestBody: Any): String {
-        return jacksonObjectMapper()
-            .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
-            .writeValueAsString(requestBody)
-    }
-
     private inline fun <reified T> generateResponseBody(responseData: ByteArray): T {
         return jacksonObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
@@ -86,7 +73,7 @@ class MineSweeperClient(private val baseUrl: String? = "https://minesweep-api.he
             .readValue(responseData)
     }
 
-    fun revealCell(gameId: String, cellNumber: String): Map<String, Int> {
+    fun revealCell(gameId: String, cellNumber: String): ReveledCellResponse {
         FuelManager.instance.basePath = baseUrl
         val(request, _, result) = "/games/$gameId/cells/$cellNumber/reveal"
             .httpPost()
@@ -94,8 +81,7 @@ class MineSweeperClient(private val baseUrl: String? = "https://minesweep-api.he
             .response()
         result.fold(
             success = { responseData ->
-                val revealedCell: RevealedCellResponse = generateResponseBody(responseData)
-                return revealedCell.revealedCells
+                return generateResponseBody(responseData)
             },
             failure = {
                 if (it.response.statusCode != 200) {
@@ -108,7 +94,7 @@ class MineSweeperClient(private val baseUrl: String? = "https://minesweep-api.he
                     println("Program exited due to API error")
                     exitProcess(0)
                 }
-                return emptyMap()
+                return ReveledCellResponse(null, null)
             }
         )
     }

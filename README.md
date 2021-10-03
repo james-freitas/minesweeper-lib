@@ -4,23 +4,37 @@ The goal of this library is to demonstrate the use of the Minesweeper API
 
 ### How to use
 
-1. Import the library in your build.gradle
+- Publish the library locally (run the command bellow in the root folder of this project)
+```bash
+./gradlew publishToMavenLocal
+```
+
+- Import the library in the `build.gradle` of your client project
 ```bash
 implementation 'com.codeonblue.minesweeper:minesweeper-lib:1.0'
 ```
-2. Use it in your code like shown bellow
+- Use it in your client project like shown bellow
 
 ```kotlin
-    println(createGameAndReturnGameId())
+    // Prints the id of the new game created
+    val gameId = createGameAndReturnGameId()
+    println(gameId)
+    println()
 
-    println(revealCellOn(
-        gameId = "1",
+    // Prints all cells that could be reveled and the game status
+    val reveledCellResponse = revealCellOn(
+        gameId = gameId,
         cellNumber = "1"
-    ))
+    )
+    println("Reveled cells")
+    println(reveledCellResponse.reveledCells.toString())
+    println()
+    println("Game status: ${reveledCellResponse.gameStatus}")
+    println()
 
+    // Prints the status of the cell marked
     println(markCellAndReturnCurrentCellStatus(
-        gameId = "a723dbce-eaa3-498f-9887-57ca1d33bd44",
-        cellNumber = "1",
-        cellCurrentStatus = "UNCHECKED"
+        gameId = gameId,
+        cellNumber = "1"
     ))
 ``` 

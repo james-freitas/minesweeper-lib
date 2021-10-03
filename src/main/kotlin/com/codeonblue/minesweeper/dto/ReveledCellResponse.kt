@@ -1,3 +1,6 @@
 package com.codeonblue.minesweeper.dto
 
-data class RevealedCellResponse(val revealedCells: Map<String, Int>)
+data class ReveledCellResponse(
+    val reveledCells: Map<String, Int>?,
+    val gameStatus: String?
+)

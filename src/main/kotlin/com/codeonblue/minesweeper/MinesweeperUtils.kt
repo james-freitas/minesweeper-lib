@@ -1,6 +1,7 @@
 package com.codeonblue.minesweeper
 
 import com.codeonblue.minesweeper.client.MineSweeperClient
+import com.codeonblue.minesweeper.dto.ReveledCellResponse
 
 const val BASE_URL = "https://minesweep-api.herokuapp.com"
 
@@ -10,13 +11,11 @@ fun createGameAndReturnGameId(baseUrl: String? = BASE_URL) =
 fun markCellAndReturnCurrentCellStatus(
     baseUrl: String? = BASE_URL,
     gameId: String,
-    cellNumber: String,
-    cellCurrentStatus: String
+    cellNumber: String
 ): String {
     return MineSweeperClient(baseUrl).markCellAndReturnCurrentCellStatus(
         gameId,
-        cellNumber,
-        cellCurrentStatus
+        cellNumber
     )
 }
 
@@ -24,6 +23,6 @@ fun revealCellOn(
     baseUrl: String? = BASE_URL,
     gameId: String,
     cellNumber: String
-): Map<String, Int> {
+): ReveledCellResponse {
     return MineSweeperClient(baseUrl).revealCell(gameId, cellNumber)
 }
